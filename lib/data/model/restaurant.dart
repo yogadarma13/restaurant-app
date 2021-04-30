@@ -7,6 +7,7 @@ class Restaurant {
   String name;
   String description;
   String pictureId;
+  String city;
   String rating;
   Menu menus;
 
@@ -15,6 +16,7 @@ class Restaurant {
     this.name,
     this.description,
     this.pictureId,
+    this.city,
     this.rating,
     this.menus,
   });
@@ -24,6 +26,7 @@ class Restaurant {
     name = restaurant["name"];
     description = restaurant["description"];
     pictureId = restaurant["pictureId"];
+    city = restaurant["city"];
     rating = restaurant["rating"].toString();
     menus = Menu.fromJson(restaurant["menus"]);
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/data/model/restaurant.dart';
+
+import 'ui/home_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,30 +14,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  Widget _buildList(BuildContext context) {
-    return FutureBuilder(
-        future: DefaultAssetBundle.of(context)
-            .loadString('assets/local_restaurant.json'),
-        builder: (context, snapshot) {
-          final List<Restaurant> restaurant = parseRestaurant(snapshot.data);
-          return ListView.builder(
-              itemCount: restaurant.length,
-              itemBuilder: (context, index) {
-                return Text(restaurant[index].menus.foods[0].name);
-              });
-        });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildList(context),
+      initialRoute: HomePage.routeName,
+      routes: {HomePage.routeName: (context) => HomePage()},
     );
   }
 }
