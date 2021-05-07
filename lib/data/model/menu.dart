@@ -8,7 +8,7 @@ class Menu {
 
   Menu.fromJson(Map<String, dynamic> jsonMenu) {
     final List foodParsed = jsonMenu["foods"];
-    final List drinkParsed = jsonMenu["foods"];
+    final List drinkParsed = jsonMenu["drinks"];
 
     foods = foodParsed.map((food) => MenuItem.fromJson(food)).toList();
     drinks = drinkParsed.map((drink) => MenuItem.fromJson(drink)).toList();
