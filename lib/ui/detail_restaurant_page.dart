@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/data/model/menu_item.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
+import 'package:share/share.dart';
 
 class DetailRestaurantPage extends StatelessWidget {
   static const routeName = '/detail_restaurant_page';
@@ -61,7 +62,7 @@ class DetailRestaurantPage extends StatelessWidget {
                 color: Colors.grey,
                 blurRadius: 2.0,
                 spreadRadius: 0.0,
-                offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                offset: Offset(2.0, 2.0),
               )
             ],
           ),
@@ -76,6 +77,11 @@ class DetailRestaurantPage extends StatelessWidget {
     );
   }
 
+  _onRestaurantShare(BuildContext context, String restaurantName) async {
+    await Share.share(
+        "Nikmati makanan dan minuman dari restaurant $restaurantName");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,6 +92,12 @@ class DetailRestaurantPage extends StatelessWidget {
               title: Text(restaurant.name),
               pinned: true,
               expandedHeight: 250,
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.share_rounded),
+                  onPressed: () => _onRestaurantShare(context, restaurant.name),
+                )
+              ],
               flexibleSpace: FlexibleSpaceBar(
                 collapseMode: CollapseMode.pin,
                 background: Hero(
