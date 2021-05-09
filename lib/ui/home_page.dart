@@ -170,17 +170,22 @@ class _HomePageState extends State<HomePage> {
           children: [
             _appBar(),
             Expanded(
-              child: MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                child: ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    itemCount: restaurantList.length,
-                    itemBuilder: (context, index) {
-                      return _buildRestaurantItem(
-                          context, restaurantList[index]);
-                    }),
-              ),
+              child: restaurantList.length == 0
+                  ? Center(
+                      child: Text("Data restaurant tidak ditemukan"),
+                    )
+                  : MediaQuery.removePadding(
+                      context: context,
+                      removeTop: true,
+                      child: ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        itemCount: restaurantList.length,
+                        itemBuilder: (context, index) {
+                          return _buildRestaurantItem(
+                              context, restaurantList[index]);
+                        },
+                      ),
+                    ),
             )
           ],
         ),
