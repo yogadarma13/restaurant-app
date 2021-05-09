@@ -2,50 +2,77 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/ui/detail_restaurant_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static const routeName = '/home_page';
 
-  Widget _searchBar() {
-    return TextField(
-      decoration: InputDecoration(
-        hintText: 'Cari restaurant',
-        hintStyle: TextStyle(color: Colors.grey),
-        prefixIcon: Icon(
-          Icons.search,
-          color: Colors.grey.shade400,
-          size: 20,
-        ),
-        filled: true,
-        fillColor: Colors.grey.shade100,
-        contentPadding: EdgeInsets.all(8),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide(color: Colors.blue.shade200),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide(color: Colors.grey.shade100),
-        ),
-      ),
-    );
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<Restaurant> allRestaurantList = [];
+  List<Restaurant> restaurantList = [];
+
+  Future _getRestaurantData() async {
+    final result = await DefaultAssetBundle.of(context)
+        .loadString('assets/local_restaurant.json');
+    allRestaurantList = parseRestaurant(result);
+
+    setState(() {
+      restaurantList = allRestaurantList;
+    });
   }
 
-  Widget _buildListRestaurant(BuildContext context) {
-    return FutureBuilder(
-      future: DefaultAssetBundle.of(context)
-          .loadString('assets/local_restaurant.json'),
-      builder: (context, snapshot) {
-        final List<Restaurant> restaurant = parseRestaurant(snapshot.data);
-        return MediaQuery.removePadding(
-          context: context,
-          removeTop: true,
-          child: ListView.builder(
-              itemCount: restaurant.length,
-              itemBuilder: (context, index) {
-                return _buildRestaurantItem(context, restaurant[index]);
-              }),
-        );
-      },
+  Widget _appBar() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Restaurant',
+          style: TextStyle(
+              fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        TextField(
+          decoration: InputDecoration(
+            hintText: 'Cari restaurant',
+            hintStyle: TextStyle(color: Colors.grey),
+            prefixIcon: Icon(
+              Icons.search,
+              color: Colors.grey.shade400,
+              size: 20,
+            ),
+            filled: true,
+            fillColor: Colors.grey.shade100,
+            contentPadding: EdgeInsets.all(8),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Colors.blue.shade200),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Colors.grey.shade100),
+            ),
+          ),
+          onChanged: (text) {
+            if (text.isEmpty) {
+              setState(() {
+                restaurantList = allRestaurantList;
+              });
+            } else {
+              setState(() {
+                restaurantList = allRestaurantList
+                    .where((restaurant) => restaurant.name
+                        .toLowerCase()
+                        .contains(text.toLowerCase()))
+                    .toList();
+              });
+            }
+          },
+        ),
+      ],
     );
   }
 
@@ -125,36 +152,37 @@ class HomePage extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    _getRestaurantData();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: NestedScrollView(
         headerSliverBuilder: (context, _) {
           return [
-            SliverSafeArea(
-              sliver: SliverToBoxAdapter(
-                child: Container(
-                  margin: EdgeInsets.only(top: 16, right: 16, left: 16),
-                  child: Text(
-                    'Restaurant',
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                ),
-              ),
-            ),
             SliverAppBar(
+              toolbarHeight: 110,
               automaticallyImplyLeading: false,
               backgroundColor: Colors.white,
               pinned: true,
-              expandedHeight: 60,
-              title: _searchBar(),
+              expandedHeight: 120,
+              title: _appBar(),
             ),
           ];
         },
-        body: _buildListRestaurant(context),
+        body: MediaQuery.removePadding(
+          context: context,
+          removeTop: true,
+          child: ListView.builder(
+              itemCount: restaurantList.length,
+              itemBuilder: (context, index) {
+                return _buildRestaurantItem(context, restaurantList[index]);
+              }),
+        ),
       ),
     );
   }
