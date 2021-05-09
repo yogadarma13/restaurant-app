@@ -24,55 +24,59 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _appBar() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Restaurant',
-          style: TextStyle(
-              fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        TextField(
-          decoration: InputDecoration(
-            hintText: 'Cari restaurant',
-            hintStyle: TextStyle(color: Colors.grey),
-            prefixIcon: Icon(
-              Icons.search,
-              color: Colors.grey.shade400,
-              size: 20,
-            ),
-            filled: true,
-            fillColor: Colors.grey.shade100,
-            contentPadding: EdgeInsets.all(8),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: Colors.blue.shade200),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: Colors.grey.shade100),
-            ),
+    return Container(
+      padding: EdgeInsets.all(16),
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Restaurant',
+            style: TextStyle(
+                fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),
           ),
-          onChanged: (text) {
-            if (text.isEmpty) {
-              setState(() {
-                restaurantList = allRestaurantList;
-              });
-            } else {
-              setState(() {
-                restaurantList = allRestaurantList
-                    .where((restaurant) => restaurant.name
-                        .toLowerCase()
-                        .contains(text.toLowerCase()))
-                    .toList();
-              });
-            }
-          },
-        ),
-      ],
+          SizedBox(
+            height: 8,
+          ),
+          TextField(
+            decoration: InputDecoration(
+              hintText: 'Cari restaurant',
+              hintStyle: TextStyle(color: Colors.grey),
+              prefixIcon: Icon(
+                Icons.search,
+                color: Colors.grey.shade400,
+                size: 20,
+              ),
+              filled: true,
+              fillColor: Colors.grey.shade100,
+              contentPadding: EdgeInsets.all(8),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide(color: Colors.blue.shade200),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide(color: Colors.grey.shade100),
+              ),
+            ),
+            onChanged: (text) {
+              if (text.isEmpty) {
+                setState(() {
+                  restaurantList = allRestaurantList;
+                });
+              } else {
+                setState(() {
+                  restaurantList = allRestaurantList
+                      .where((restaurant) => restaurant.name
+                          .toLowerCase()
+                          .contains(text.toLowerCase()))
+                      .toList();
+                });
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -160,28 +164,25 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: NestedScrollView(
-        headerSliverBuilder: (context, _) {
-          return [
-            SliverAppBar(
-              toolbarHeight: 110,
-              automaticallyImplyLeading: false,
-              backgroundColor: Colors.white,
-              pinned: true,
-              expandedHeight: 120,
-              title: _appBar(),
-            ),
-          ];
-        },
-        body: MediaQuery.removePadding(
-          context: context,
-          removeTop: true,
-          child: ListView.builder(
-              itemCount: restaurantList.length,
-              itemBuilder: (context, index) {
-                return _buildRestaurantItem(context, restaurantList[index]);
-              }),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _appBar(),
+            Expanded(
+              child: MediaQuery.removePadding(
+                context: context,
+                removeTop: true,
+                child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    itemCount: restaurantList.length,
+                    itemBuilder: (context, index) {
+                      return _buildRestaurantItem(
+                          context, restaurantList[index]);
+                    }),
+              ),
+            )
+          ],
         ),
       ),
     );
