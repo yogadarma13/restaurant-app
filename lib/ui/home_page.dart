@@ -10,22 +10,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Restaurant> allRestaurantList = [];
-  List<Restaurant> restaurantList = [];
+  List<Restaurant> _allRestaurantList = [];
+  List<Restaurant> _restaurantList = [];
 
   Future _getRestaurantData() async {
     final result = await DefaultAssetBundle.of(context)
         .loadString('assets/local_restaurant.json');
-    allRestaurantList = parseRestaurant(result);
+    _allRestaurantList = parseRestaurant(result);
 
     setState(() {
-      restaurantList = allRestaurantList;
+      _restaurantList = _allRestaurantList;
     });
   }
 
   Widget _appBar() {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
               ),
               filled: true,
               fillColor: Colors.grey.shade100,
-              contentPadding: EdgeInsets.all(8),
+              contentPadding: const EdgeInsets.all(8),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(30),
                 borderSide: BorderSide(color: Colors.blue.shade200),
@@ -62,11 +62,11 @@ class _HomePageState extends State<HomePage> {
             onChanged: (text) {
               if (text.isEmpty) {
                 setState(() {
-                  restaurantList = allRestaurantList;
+                  _restaurantList = _allRestaurantList;
                 });
               } else {
                 setState(() {
-                  restaurantList = allRestaurantList
+                  _restaurantList = _allRestaurantList
                       .where((restaurant) => restaurant.name
                           .toLowerCase()
                           .contains(text.toLowerCase()))
@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
             arguments: restaurant);
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Expanded(
               child: Container(
-                margin: EdgeInsets.only(left: 8),
+                margin: const EdgeInsets.only(left: 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 8),
+                      margin: const EdgeInsets.only(top: 8),
                       child: Row(
                         children: [
                           Icon(
@@ -170,7 +170,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             _appBar(),
             Expanded(
-              child: restaurantList.length == 0
+              child: _restaurantList.length == 0
                   ? Center(
                       child: Text("Data restaurant tidak ditemukan"),
                     )
@@ -179,10 +179,10 @@ class _HomePageState extends State<HomePage> {
                       removeTop: true,
                       child: ListView.builder(
                         physics: BouncingScrollPhysics(),
-                        itemCount: restaurantList.length,
+                        itemCount: _restaurantList.length,
                         itemBuilder: (context, index) {
                           return _buildRestaurantItem(
-                              context, restaurantList[index]);
+                              context, _restaurantList[index]);
                         },
                       ),
                     ),

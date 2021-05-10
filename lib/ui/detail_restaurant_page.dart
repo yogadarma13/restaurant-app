@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/data/model/menu_item.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
@@ -11,13 +12,57 @@ class DetailRestaurantPage extends StatelessWidget {
 
   const DetailRestaurantPage({@required this.restaurant});
 
+  void _onRestaurantShare(BuildContext context, String restaurantName) async {
+    await Share.share(
+        "Nikmati makanan dan minuman dari restaurant $restaurantName");
+  }
+
+  void _showMenuSelectedDialog(BuildContext context, String itemName) {
+    defaultTargetPlatform == TargetPlatform.iOS
+        ? showCupertinoDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (context) {
+              return CupertinoAlertDialog(
+                title: Text('Menu'),
+                content: Text('Apakah memilih menu $itemName'),
+                actions: [
+                  CupertinoDialogAction(
+                    child: Text('Oke'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              );
+            },
+          )
+        : showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Menu'),
+                content: Text('Anda memilih menu $itemName'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('Oke'),
+                  ),
+                ],
+              );
+            },
+          );
+  }
+
   Widget _buildMenuList(
       BuildContext context, String title, List<MenuItem> menus) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          margin: EdgeInsets.only(top: 16, bottom: 8),
+          margin: const EdgeInsets.only(top: 16, bottom: 8),
           child: Text(
             title,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -36,7 +81,7 @@ class DetailRestaurantPage extends StatelessWidget {
               shrinkWrap: true,
               itemCount: menus.length,
               itemBuilder: (context, index) {
-                return _buildMenuItem(menus[index].name);
+                return _buildMenuItem(context, menus[index].name);
               },
             ),
           ),
@@ -45,41 +90,44 @@ class DetailRestaurantPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItem(String itemName) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 4),
-      child: Row(children: [
-        Container(
-          height: 88,
-          width: 88,
-          padding: EdgeInsets.all(16),
-          margin: EdgeInsets.only(right: 16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey,
-                blurRadius: 2.0,
-                spreadRadius: 0.0,
-                offset: Offset(2.0, 2.0),
-              )
-            ],
-          ),
-          child: Image.asset(
-            "assets/images/food_placeholder.png",
-            width: 48,
-            height: 48,
-          ),
+  Widget _buildMenuItem(BuildContext context, String itemName) {
+    return GestureDetector(
+      onTap: () => _showMenuSelectedDialog(context, itemName),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.transparent,
         ),
-        Text(itemName),
-      ]),
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          children: [
+            Container(
+              height: 88,
+              width: 88,
+              padding: const EdgeInsets.all(16),
+              margin: const EdgeInsets.only(right: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 2.0,
+                    spreadRadius: 0.0,
+                    offset: Offset(2.0, 2.0),
+                  )
+                ],
+              ),
+              child: Image.asset(
+                "assets/images/food_placeholder.png",
+                width: 48,
+                height: 48,
+              ),
+            ),
+            Text(itemName),
+          ],
+        ),
+      ),
     );
-  }
-
-  _onRestaurantShare(BuildContext context, String restaurantName) async {
-    await Share.share(
-        "Nikmati makanan dan minuman dari restaurant $restaurantName");
   }
 
   @override
@@ -148,7 +196,7 @@ class DetailRestaurantPage extends StatelessWidget {
                   ],
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 16, bottom: 8),
+                  margin: const EdgeInsets.only(top: 16, bottom: 8),
                   child: Text(
                     "Deskripsi restaurant",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
