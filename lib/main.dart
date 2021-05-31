@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/common/styles.dart';
 import 'package:restaurant_app/ui/detail_restaurant_page.dart';
@@ -5,6 +7,7 @@ import 'package:restaurant_app/ui/detail_restaurant_page.dart';
 import 'ui/home_page.dart';
 
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
   runApp(MyApp());
 }
 
@@ -15,6 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'Restaurant App',
       theme: ThemeData(
         primaryColor: primaryColor,
+        accentColor: secondaryColor,
         appBarTheme: AppBarTheme(
           textTheme: Theme.of(context).textTheme.apply(bodyColor: Colors.black),
           elevation: 0,
@@ -28,5 +32,14 @@ class MyApp extends StatelessWidget {
             )
       },
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
