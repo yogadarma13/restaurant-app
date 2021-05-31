@@ -3,16 +3,16 @@ import 'package:restaurant_app/data/model/restaurant_result.dart';
 
 class CardRestaurant extends StatelessWidget {
   final Restaurant restaurant;
+  final Function onItemTap;
 
-  const CardRestaurant({Key key, @required this.restaurant}) : super(key: key);
+  const CardRestaurant(
+      {Key key, @required this.restaurant, @required this.onItemTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // onTap: () {
-      //   Navigator.pushNamed(context, DetailRestaurantPage.routeName,
-      //       arguments: restaurant);
-      // },
+      onTap: onItemTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
@@ -23,7 +23,7 @@ class CardRestaurant extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.network(
-                  "https://restaurant-api.dicoding.dev/images/medium/${restaurant.pictureId}",
+                  "https://restaurant-api.dicoding.dev/images/small/${restaurant.pictureId}",
                   width: 120,
                   height: 100,
                   fit: BoxFit.cover,
