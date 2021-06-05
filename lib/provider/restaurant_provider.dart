@@ -47,4 +47,32 @@ class RestaurantProvider extends ChangeNotifier {
       return _message;
     }
   }
+
+  searchRestaurant(String query) async {
+    try {
+      _resultState = ResultState.Loading;
+      notifyListeners();
+
+      final restaurant = await apiService.searchRestaurant(query);
+      if (restaurant.restaurants.isEmpty) {
+        _resultState = ResultState.NoData;
+        notifyListeners();
+
+        _message = "Restaurant tidak ditemukan";
+        return _message;
+      } else {
+        _resultState = ResultState.HasData;
+        notifyListeners();
+
+        _restaurantResult = restaurant;
+        return _restaurantResult;
+      }
+    } catch (e) {
+      _resultState = ResultState.Error;
+      notifyListeners();
+
+      _message = "Tejadi kesalahan";
+      return _message;
+    }
+  }
 }

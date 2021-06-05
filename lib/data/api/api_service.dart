@@ -8,6 +8,7 @@ class ApiService {
   static final String _authority = 'restaurant-api.dicoding.dev';
   static final String _pathListRestaurant = '/list';
   static final String _pathDetailRestaurant = '/detail';
+  static final String _pathSearchRestaurant = "/search";
 
   Future<RestaurantResult> getRestaurant() async {
     final Uri url = Uri.https(_authority, _pathListRestaurant);
@@ -29,7 +30,18 @@ class ApiService {
     if (response.statusCode == 200) {
       return DetailRestaurantResult.fromJson(json.decode(response.body));
     } else {
-      throw Exception("Gagal mengambil data restaurant");
+      throw Exception("Gagal mengambil data detail restaurant");
+    }
+  }
+
+  Future<RestaurantResult> searchRestaurant(String query) async {
+    final Uri url = Uri.https(_authority, _pathSearchRestaurant, {'q': query});
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      return RestaurantResult.fromJson(json.decode(response.body));
+    } else {
+      throw Exception("Terjadi kesalahan");
     }
   }
 }
