@@ -8,6 +8,7 @@ import 'package:restaurant_app/data/model/menu_page_arguments.dart';
 import 'package:restaurant_app/provider/detail_restaurant_provider.dart';
 import 'package:restaurant_app/provider/result_state.dart';
 import 'package:restaurant_app/ui/menu_list_page.dart';
+import 'package:restaurant_app/widgets/custom_add_review_dialog.dart';
 import 'package:restaurant_app/widgets/item_menu.dart';
 import 'package:share/share.dart';
 
@@ -140,10 +141,19 @@ class DetailRestaurantPage extends StatelessWidget {
                       expandedHeight: 250,
                       actions: [
                         IconButton(
+                          icon: Icon(Icons.rate_review_rounded),
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) => CustomAddReviewDialog(
+                              restaurantId: restaurantId,
+                            ),
+                          ),
+                        ),
+                        IconButton(
                           icon: Icon(Icons.share_rounded),
                           onPressed: () =>
                               _onRestaurantShare(context, restaurant.name),
-                        )
+                        ),
                       ],
                       flexibleSpace: FlexibleSpaceBar(
                         collapseMode: CollapseMode.pin,

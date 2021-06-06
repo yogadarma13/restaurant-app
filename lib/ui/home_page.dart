@@ -26,7 +26,7 @@ class HomePage extends StatelessWidget {
             builder: (context, state, _) {
               return TextField(
                 decoration: InputDecoration(
-                  hintText: 'Cari restaurant',
+                  hintText: 'Cari restaurant atau menu',
                   hintStyle: TextStyle(color: Colors.grey),
                   prefixIcon: Icon(
                     Icons.search,
