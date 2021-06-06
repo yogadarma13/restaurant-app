@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/model/detail_restaurant_result.dart';
+import 'package:restaurant_app/data/model/menu_page_arguments.dart';
 import 'package:restaurant_app/provider/detail_restaurant_provider.dart';
 import 'package:restaurant_app/provider/result_state.dart';
+import 'package:restaurant_app/ui/menu_list_page.dart';
 import 'package:restaurant_app/widgets/item_menu.dart';
 import 'package:share/share.dart';
 
@@ -65,12 +67,31 @@ class DetailRestaurantPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          margin: const EdgeInsets.only(top: 16, bottom: 8),
-          child: Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Container(
+                child: Text(
+                  title,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pushNamed(
+                context,
+                MenuListPage.routeName,
+                arguments:
+                    MenuPageArguments(appbarTitle: "Menu $title", menus: menus),
+              ),
+              child: Text(
+                "Lihat semua",
+                style:
+                    TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
         ),
         NotificationListener<OverscrollIndicatorNotification>(
           onNotification: (overscroll) {
@@ -83,7 +104,7 @@ class DetailRestaurantPage extends StatelessWidget {
             child: ListView.builder(
               physics: ClampingScrollPhysics(),
               shrinkWrap: true,
-              itemCount: menus.length,
+              itemCount: menus.sublist(0, 3).length,
               itemBuilder: (context, index) {
                 return ItemMenu(
                   menuName: menus[index].name,
