@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/common/styles.dart';
+import 'package:restaurant_app/data/model/menu_page_arguments.dart';
+import 'package:restaurant_app/data/model/review_page_arguments.dart';
 import 'package:restaurant_app/ui/detail_restaurant_page.dart';
 import 'package:restaurant_app/ui/menu_list_page.dart';
 import 'package:restaurant_app/ui/review_list_page.dart';
@@ -27,13 +29,32 @@ class MyApp extends StatelessWidget {
         ),
       ),
       initialRoute: HomePage.routeName,
-      routes: {
-        HomePage.routeName: (context) => HomePage(),
-        DetailRestaurantPage.routeName: (context) => DetailRestaurantPage(
-              restaurantId: ModalRoute.of(context).settings.arguments,
-            ),
-        MenuListPage.routeName: (context) => MenuListPage(),
-        ReviewListPage.routeName: (context) => ReviewListPage()
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case HomePage.routeName:
+            return MaterialPageRoute(
+              builder: (context) => HomePage(),
+            );
+          case DetailRestaurantPage.routeName:
+            return MaterialPageRoute(
+              builder: (context) => DetailRestaurantPage(
+                  restaurantId: settings.arguments as String),
+            );
+          case MenuListPage.routeName:
+            return MaterialPageRoute(
+              builder: (context) => MenuListPage(
+                args: settings.arguments as MenuPageArguments,
+              ),
+            );
+          case ReviewListPage.routeName:
+            return MaterialPageRoute(
+              builder: (context) => ReviewListPage(
+                args: settings.arguments as ReviewPageArguments,
+              ),
+            );
+          default:
+            return null;
+        }
       },
     );
   }

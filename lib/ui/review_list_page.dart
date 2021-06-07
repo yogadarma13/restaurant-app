@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -8,9 +9,65 @@ import 'package:restaurant_app/provider/result_state.dart';
 import 'package:restaurant_app/provider/review_provider.dart';
 import 'package:restaurant_app/widgets/custom_add_review_dialog.dart';
 import 'package:restaurant_app/widgets/item_review.dart';
+import 'package:restaurant_app/widgets/platform_widget.dart';
 
 class ReviewListPage extends StatelessWidget {
   static const routeName = '/review_list_page';
+  static const String reviewTitle = "Review Restaurant";
+
+  final ReviewPageArguments args;
+
+  ReviewListPage({@required this.args});
+
+  Widget _buildAndroid(BuildContext context) {
+    return Consumer<ReviewProvider>(
+      builder: (context, state, _) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text("Review Restaurant"),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => CustomAddReviewDialog(
+                restaurantId: args.restaurantId,
+                addReview: state.addNewReview,
+              ),
+            ),
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.blue,
+          ),
+          body: _buildWidget(context, state, args.reviews),
+        );
+      },
+    );
+  }
+
+  Widget _buildIos(BuildContext context) {
+    return Consumer<ReviewProvider>(
+      builder: (context, state, _) {
+        return CupertinoPageScaffold(
+          navigationBar: CupertinoNavigationBar(
+            middle: Text("Review Restaurant"),
+            trailing: GestureDetector(
+              child: Icon(CupertinoIcons.add),
+              onTap: () => showDialog(
+                context: context,
+                builder: (context) => CustomAddReviewDialog(
+                  restaurantId: args.restaurantId,
+                  addReview: state.addNewReview,
+                ),
+              ),
+            ),
+          ),
+          child: _buildWidget(context, state, args.reviews),
+        );
+      },
+    );
+  }
 
   Widget _buildReviewList(List<CustomerReview> reviews) {
     return ListView.builder(
@@ -51,38 +108,13 @@ class ReviewListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context).settings.arguments as ReviewPageArguments;
-    final restaurantId = args.restaurantId;
-    final reviews = args.reviews;
-
     return ChangeNotifierProvider(
       create: (_) => ReviewProvider(
         apiService: ApiService(),
       ),
-      child: Consumer<ReviewProvider>(
-        builder: (context, state, _) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text("Review Restaurant"),
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () => showDialog(
-                context: context,
-                builder: (context) => CustomAddReviewDialog(
-                  restaurantId: restaurantId,
-                  addReview: state.addNewReview,
-                ),
-              ),
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              backgroundColor: Colors.blue,
-            ),
-            body: _buildWidget(context, state, reviews),
-          );
-        },
+      child: PlatformWidget(
+        androidBuilder: _buildAndroid,
+        iosBuilder: _buildIos,
       ),
     );
   }
