@@ -3,13 +3,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
+import 'package:restaurant_app/data/model/customer_review.dart';
 import 'package:restaurant_app/data/model/detail_restaurant_result.dart';
 import 'package:restaurant_app/data/model/menu_page_arguments.dart';
+import 'package:restaurant_app/data/model/review_page_arguments.dart';
 import 'package:restaurant_app/provider/detail_restaurant_provider.dart';
 import 'package:restaurant_app/provider/result_state.dart';
 import 'package:restaurant_app/ui/menu_list_page.dart';
-import 'package:restaurant_app/widgets/custom_add_review_dialog.dart';
+import 'package:restaurant_app/ui/review_list_page.dart';
 import 'package:restaurant_app/widgets/item_menu.dart';
+import 'package:restaurant_app/widgets/item_review.dart';
 import 'package:share/share.dart';
 
 class DetailRestaurantPage extends StatelessWidget {
@@ -105,7 +108,8 @@ class DetailRestaurantPage extends StatelessWidget {
             child: ListView.builder(
               physics: ClampingScrollPhysics(),
               shrinkWrap: true,
-              itemCount: menus.sublist(0, 3).length,
+              itemCount:
+                  menus.length > 3 ? menus.sublist(0, 3).length : menus.length,
               itemBuilder: (context, index) {
                 return ItemMenu(
                   menuName: menus[index].name,
@@ -117,6 +121,31 @@ class DetailRestaurantPage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildReviewList(BuildContext context, List<CustomerReview> reviews) {
+    return NotificationListener<OverscrollIndicatorNotification>(
+      onNotification: (overscroll) {
+        overscroll.disallowGlow();
+        return;
+      },
+      child: MediaQuery.removePadding(
+        removeTop: true,
+        context: context,
+        child: ListView.builder(
+          physics: ClampingScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: reviews.length > 3
+              ? reviews.sublist(0, 3).length
+              : reviews.length,
+          itemBuilder: (context, index) {
+            return ItemReview(
+              review: reviews[index],
+            );
+          },
+        ),
+      ),
     );
   }
 
@@ -140,15 +169,6 @@ class DetailRestaurantPage extends StatelessWidget {
                       pinned: true,
                       expandedHeight: 250,
                       actions: [
-                        IconButton(
-                          icon: Icon(Icons.rate_review_rounded),
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (context) => CustomAddReviewDialog(
-                              restaurantId: restaurantId,
-                            ),
-                          ),
-                        ),
                         IconButton(
                           icon: Icon(Icons.share_rounded),
                           onPressed: () =>
@@ -217,7 +237,40 @@ class DetailRestaurantPage extends StatelessWidget {
                         _buildMenuList(
                             context, "Makanan", restaurant.menus.foods),
                         _buildMenuList(
-                            context, "Minuman", restaurant.menus.drinks)
+                            context, "Minuman", restaurant.menus.drinks),
+                        SizedBox(
+                          height: 16.0,
+                        ),
+                        Divider(
+                          thickness: 1,
+                        ),
+                        SizedBox(
+                          height: 8.0,
+                        ),
+                        Text(
+                          "Review restaurant",
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 8.0,
+                        ),
+                        _buildReviewList(
+                            context, state.result.restaurant.customerReviews),
+                        Center(
+                          child: TextButton(
+                            onPressed: () => Navigator.pushNamed(
+                                context, ReviewListPage.routeName,
+                                arguments: ReviewPageArguments(
+                                    restaurantId: restaurantId,
+                                    reviews: state
+                                        .result.restaurant.customerReviews)),
+                            child: Text(
+                              "Lihat semua review",
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),

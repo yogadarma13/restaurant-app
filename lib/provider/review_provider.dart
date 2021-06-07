@@ -20,9 +20,6 @@ class ReviewProvider extends ChangeNotifier {
 
   addNewReview(String restaurantId, String name, String review) async {
     try {
-      _resultState = ResultState.Loading;
-      notifyListeners();
-
       final reviewData =
           await apiService.addNewReview(restaurantId, name, review);
       if (reviewData.customerReviews.isEmpty) {

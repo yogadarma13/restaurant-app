@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
-import 'package:restaurant_app/provider/result_state.dart';
 import 'package:restaurant_app/provider/review_provider.dart';
 
 class CustomAddReviewDialog extends StatefulWidget {
   final String restaurantId;
+  final Function addReview;
 
-  CustomAddReviewDialog({@required this.restaurantId});
+  CustomAddReviewDialog(
+      {@required this.restaurantId, @required this.addReview});
 
   @override
   _CustomAddReviewDialogState createState() => _CustomAddReviewDialogState();
@@ -100,56 +101,19 @@ class _CustomAddReviewDialogState extends State<CustomAddReviewDialog> {
               SizedBox(
                 height: 24.0,
               ),
-              Consumer<ReviewProvider>(
-                builder: (context, state, _) {
-                  if (state.state == ResultState.Loading) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (state.state == ResultState.HasData) {
-                    Fluttertoast.showToast(
-                        msg: state.message, toastLength: Toast.LENGTH_SHORT);
-                    Navigator.of(context).pop();
-                    return Container();
-                  } else if (state.state == ResultState.NoData) {
-                    Fluttertoast.showToast(
-                        msg: state.message, toastLength: Toast.LENGTH_SHORT);
-                    Navigator.of(context).pop();
-                    return Container();
-                  } else if (state.state == ResultState.Error) {
-                    Fluttertoast.showToast(
-                        msg: state.message, toastLength: Toast.LENGTH_SHORT);
-                    return Container(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          (nameController.text.isEmpty ||
-                                  reviewController.text.isEmpty)
-                              ? Fluttertoast.showToast(
-                                  msg: "Lengkapi data terlebih dahulu",
-                                  toastLength: Toast.LENGTH_SHORT)
-                              : state.addNewReview(widget.restaurantId,
-                                  nameController.text, reviewController.text);
-                        },
-                        child: Text("Tambahkan review"),
-                      ),
-                    );
-                  } else {
-                    return Container(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          (nameController.text.isEmpty ||
-                                  reviewController.text.isEmpty)
-                              ? Fluttertoast.showToast(
-                                  msg: "Lengkapi data terlebih dahulu",
-                                  toastLength: Toast.LENGTH_SHORT)
-                              : state.addNewReview(widget.restaurantId,
-                                  nameController.text, reviewController.text);
-                        },
-                        child: Text("Tambahkan review"),
-                      ),
-                    );
-                  }
-                },
+              Container(
+                child: ElevatedButton(
+                  onPressed: () {
+                    (nameController.text.isEmpty ||
+                            reviewController.text.isEmpty)
+                        ? Fluttertoast.showToast(
+                            msg: "Lengkapi data terlebih dahulu",
+                            toastLength: Toast.LENGTH_SHORT)
+                        : widget.addReview(widget.restaurantId,
+                            nameController.text, reviewController.text);
+                  },
+                  child: Text("Tambahkan review"),
+                ),
               ),
             ],
           ),
