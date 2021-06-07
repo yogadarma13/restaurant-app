@@ -40,7 +40,7 @@ class ReviewProvider extends ChangeNotifier {
       _resultState = ResultState.Error;
       notifyListeners();
 
-      _message = "Terjadi kesalahan";
+      _message = "Terjadi kesalahan atau periksa koneksi internet anda";
       return _message;
     }
   }

@@ -43,7 +43,7 @@ class RestaurantProvider extends ChangeNotifier {
       _resultState = ResultState.Error;
       notifyListeners();
 
-      _message = "Tejadi kesalahan";
+      _message = "Tejadi kesalahan atau periksa konseksi internet anda";
       return _message;
     }
   }
@@ -71,7 +71,7 @@ class RestaurantProvider extends ChangeNotifier {
       _resultState = ResultState.Error;
       notifyListeners();
 
-      _message = "Tejadi kesalahan";
+      _message = "Tejadi kesalahan atau periksa koneksi internet anda";
       return _message;
     }
   }

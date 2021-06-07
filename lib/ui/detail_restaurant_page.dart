@@ -267,7 +267,9 @@ class DetailRestaurantPage extends StatelessWidget {
                                         .result.restaurant.customerReviews)),
                             child: Text(
                               "Lihat semua review",
-                              style: TextStyle(color: Colors.blue),
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                         )
