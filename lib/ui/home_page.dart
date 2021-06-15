@@ -1,22 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
+import 'package:restaurant_app/ui/favorite_restaurant_page.dart';
 import 'package:restaurant_app/ui/restaurant_list_page.dart';
 
 class HomePage extends StatelessWidget {
   static const routeName = '/home_page';
 
-  Widget _appBar() {
+  Widget _appBar(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Restaurant',
-            style: TextStyle(
-                fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Restaurant',
+                style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+              IconButton(
+                icon: Icon(Icons.favorite_rounded),
+                onPressed: () => Navigator.pushNamed(
+                    context, FavoriteRestaurantPage.routeName),
+              ),
+            ],
           ),
           SizedBox(
             height: 8,
@@ -62,7 +75,7 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _appBar(),
+            _appBar(context),
             Expanded(
               child: RestaurantListPage(),
             )

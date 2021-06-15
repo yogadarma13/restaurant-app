@@ -10,9 +10,9 @@ class DatabaseProvider extends ChangeNotifier {
     _getAllRestaurant();
   }
 
-  late ResultState _state;
+  late ResultState _resultState;
 
-  ResultState get state => _state;
+  ResultState get state => _resultState;
 
   String _message = '';
 
@@ -27,21 +27,38 @@ class DatabaseProvider extends ChangeNotifier {
       await databaseHelper.insertRestaurantFavorite(restaurant);
       _getAllRestaurant();
     } catch (e) {
-      _state = ResultState.Error;
+      _resultState = ResultState.Error;
       _message = 'Error: $e';
       notifyListeners();
     }
   }
 
   _getAllRestaurant() async {
-    _restaurants = await databaseHelper.getAllRestaurant();
-    if (_restaurants.length > 0) {
-      _state = ResultState.HasData;
-    } else {
-      _state = ResultState.NoData;
-      _message = 'Empty Data';
+    try {
+      _resultState = ResultState.Loading;
+      notifyListeners();
+
+      final restaurantList = await databaseHelper.getAllRestaurant();
+      if (restaurantList.isEmpty) {
+        _resultState = ResultState.NoData;
+        notifyListeners();
+
+        _message = "Data favorit restaurant kosong";
+        return _message;
+      } else {
+        _resultState = ResultState.HasData;
+        notifyListeners();
+
+        _restaurants = restaurantList;
+        return _restaurants;
+      }
+    } catch (e) {
+      _resultState = ResultState.Error;
+      notifyListeners();
+
+      _message = "Tejadi kesalahan atau periksa konseksi internet anda";
+      return _message;
     }
-    notifyListeners();
   }
 
   Future<bool> isFavorite(String id) async {
@@ -54,7 +71,7 @@ class DatabaseProvider extends ChangeNotifier {
       await databaseHelper.removeRestaurantFromFavorite(id);
       _getAllRestaurant();
     } catch (e) {
-      _state = ResultState.Error;
+      _resultState = ResultState.Error;
       _message = 'Error: $e';
       notifyListeners();
     }

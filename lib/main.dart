@@ -11,6 +11,7 @@ import 'package:restaurant_app/provider/database_provider.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/provider/review_provider.dart';
 import 'package:restaurant_app/ui/detail_restaurant_page.dart';
+import 'package:restaurant_app/ui/favorite_restaurant_page.dart';
 import 'package:restaurant_app/ui/menu_list_page.dart';
 import 'package:restaurant_app/ui/review_list_page.dart';
 
@@ -67,6 +68,10 @@ class MyApp extends StatelessWidget {
                 builder: (context) => ReviewListPage(
                   args: settings.arguments as ReviewPageArguments?,
                 ),
+              );
+            case FavoriteRestaurantPage.routeName:
+              return MaterialPageRoute(
+                builder: (context) => FavoriteRestaurantPage(),
               );
             default:
               return null;
