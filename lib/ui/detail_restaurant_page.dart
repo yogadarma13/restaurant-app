@@ -1,16 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/model/customer_review.dart';
 import 'package:restaurant_app/data/model/detail_restaurant_result.dart';
 import 'package:restaurant_app/data/model/menu_page_arguments.dart';
+import 'package:restaurant_app/data/model/restaurant_result.dart';
 import 'package:restaurant_app/data/model/review_page_arguments.dart';
+import 'package:restaurant_app/provider/database_provider.dart';
 import 'package:restaurant_app/provider/detail_restaurant_provider.dart';
-import 'package:restaurant_app/provider/result_state.dart';
 import 'package:restaurant_app/ui/menu_list_page.dart';
 import 'package:restaurant_app/ui/review_list_page.dart';
+import 'package:restaurant_app/utils/result_state.dart';
 import 'package:restaurant_app/widgets/item_menu.dart';
 import 'package:restaurant_app/widgets/item_review.dart';
 import 'package:share/share.dart';
@@ -160,27 +163,77 @@ class DetailRestaurantPage extends StatelessWidget {
             if (state.state == ResultState.Loading) {
               return Center(child: CircularProgressIndicator());
             } else if (state.state == ResultState.HasData) {
-              Restaurant restaurant = state.result!.restaurant!;
+              RestaurantDetail restaurantDetail = state.result!.restaurant!;
               return NestedScrollView(
                 headerSliverBuilder: (context, _) {
                   return [
                     SliverAppBar(
-                      title: Text(restaurant.name!),
+                      title: Text(restaurantDetail.name!),
                       pinned: true,
                       expandedHeight: 250,
                       actions: [
                         IconButton(
                           icon: Icon(Icons.share_rounded),
-                          onPressed: () =>
-                              _onRestaurantShare(context, restaurant.name),
+                          onPressed: () => _onRestaurantShare(
+                              context, restaurantDetail.name),
                         ),
+                        Consumer<DatabaseProvider>(
+                          builder: (context, provider, child) {
+                            return FutureBuilder<bool>(
+                              future: provider.isFavorite(restaurantId!),
+                              builder: (context, snapshot) {
+                                var isFavorite = snapshot.data ?? false;
+                                return isFavorite
+                                    ? IconButton(
+                                        icon: Icon(
+                                          Icons.favorite_rounded,
+                                          color: Colors.red,
+                                        ),
+                                        onPressed: () {
+                                          Fluttertoast.showToast(
+                                            msg:
+                                                "Restaurant dihapus dari favorit",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                          );
+                                          provider.removeRestaurantFromFavorite(
+                                            restaurantId!,
+                                          );
+                                        },
+                                      )
+                                    : IconButton(
+                                        icon:
+                                            Icon(Icons.favorite_border_rounded),
+                                        onPressed: () {
+                                          Fluttertoast.showToast(
+                                            msg:
+                                                "Restaurant ditambahkan ke favorit",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                          );
+                                          provider.insertRestaurantFavorite(
+                                            Restaurant(
+                                              id: restaurantDetail.id,
+                                              name: restaurantDetail.name,
+                                              description:
+                                                  restaurantDetail.description,
+                                              pictureId:
+                                                  restaurantDetail.pictureId,
+                                              city: restaurantDetail.city,
+                                              rating: restaurantDetail.rating,
+                                            ),
+                                          );
+                                        },
+                                      );
+                              },
+                            );
+                          },
+                        )
                       ],
                       flexibleSpace: FlexibleSpaceBar(
                         collapseMode: CollapseMode.pin,
                         background: Hero(
-                          tag: restaurant.pictureId!,
+                          tag: restaurantDetail.pictureId!,
                           child: Image.network(
-                            "https://restaurant-api.dicoding.dev/images/medium/${restaurant.pictureId}",
+                            "https://restaurant-api.dicoding.dev/images/medium/${restaurantDetail.pictureId}",
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -204,7 +257,7 @@ class DetailRestaurantPage extends StatelessWidget {
                               size: 20,
                             ),
                             Text(
-                              restaurant.rating.toString(),
+                              restaurantDetail.rating.toString(),
                               style: TextStyle(fontSize: 16),
                             ),
                             Container(
@@ -220,7 +273,7 @@ class DetailRestaurantPage extends StatelessWidget {
                               size: 20,
                             ),
                             Text(
-                              restaurant.city!,
+                              restaurantDetail.city!,
                               style: TextStyle(fontSize: 16),
                             ),
                           ],
@@ -233,11 +286,11 @@ class DetailRestaurantPage extends StatelessWidget {
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                         ),
-                        Text(restaurant.description!),
+                        Text(restaurantDetail.description!),
                         _buildMenuList(
-                            context, "Makanan", restaurant.menus!.foods!),
-                        _buildMenuList(
-                            context, "Minuman", restaurant.menus!.drinks!),
+                            context, "Makanan", restaurantDetail.menus!.foods!),
+                        _buildMenuList(context, "Minuman",
+                            restaurantDetail.menus!.drinks!),
                         SizedBox(
                           height: 16.0,
                         ),
@@ -255,8 +308,8 @@ class DetailRestaurantPage extends StatelessWidget {
                         SizedBox(
                           height: 8.0,
                         ),
-                        _buildReviewList(
-                            context, state.result!.restaurant!.customerReviews!),
+                        _buildReviewList(context,
+                            state.result!.restaurant!.customerReviews!),
                         Center(
                           child: TextButton(
                             onPressed: () => Navigator.pushNamed(

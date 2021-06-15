@@ -2,11 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/model/customer_review.dart';
 import 'package:restaurant_app/data/model/review_page_arguments.dart';
-import 'package:restaurant_app/provider/result_state.dart';
 import 'package:restaurant_app/provider/review_provider.dart';
+import 'package:restaurant_app/utils/result_state.dart';
 import 'package:restaurant_app/widgets/custom_add_review_dialog.dart';
 import 'package:restaurant_app/widgets/item_review.dart';
 import 'package:restaurant_app/widgets/platform_widget.dart';
@@ -108,14 +107,9 @@ class ReviewListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ReviewProvider(
-        apiService: ApiService(),
-      ),
-      child: PlatformWidget(
-        androidBuilder: _buildAndroid,
-        iosBuilder: _buildIos,
-      ),
+    return PlatformWidget(
+      androidBuilder: _buildAndroid,
+      iosBuilder: _buildIos,
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/ui/restaurant_list_page.dart';
 
@@ -60,17 +59,14 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: ChangeNotifierProvider(
-          create: (_) => RestaurantProvider(apiService: ApiService()),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _appBar(),
-              Expanded(
-                child: RestaurantListPage(),
-              )
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _appBar(),
+            Expanded(
+              child: RestaurantListPage(),
+            )
+          ],
         ),
       ),
     );

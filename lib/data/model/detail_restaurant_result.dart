@@ -9,13 +9,13 @@ class DetailRestaurantResult {
 
   bool? error;
   String? message;
-  Restaurant? restaurant;
+  RestaurantDetail? restaurant;
 
   factory DetailRestaurantResult.fromJson(Map<String, dynamic> json) =>
       DetailRestaurantResult(
         error: json["error"],
         message: json["message"],
-        restaurant: Restaurant.fromJson(json["restaurant"]),
+        restaurant: RestaurantDetail.fromJson(json["restaurant"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -25,8 +25,8 @@ class DetailRestaurantResult {
       };
 }
 
-class Restaurant {
-  Restaurant({
+class RestaurantDetail {
+  RestaurantDetail({
     this.id,
     this.name,
     this.description,
@@ -50,7 +50,8 @@ class Restaurant {
   double? rating;
   List<CustomerReview>? customerReviews;
 
-  factory Restaurant.fromJson(Map<String, dynamic> json) => Restaurant(
+  factory RestaurantDetail.fromJson(Map<String, dynamic> json) =>
+      RestaurantDetail(
         id: json["id"],
         name: json["name"],
         description: json["description"],
