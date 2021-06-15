@@ -38,18 +38,18 @@ class MyApp extends StatelessWidget {
           case DetailRestaurantPage.routeName:
             return MaterialPageRoute(
               builder: (context) => DetailRestaurantPage(
-                  restaurantId: settings.arguments as String),
+                  restaurantId: settings.arguments as String?),
             );
           case MenuListPage.routeName:
             return MaterialPageRoute(
               builder: (context) => MenuListPage(
-                args: settings.arguments as MenuPageArguments,
+                args: settings.arguments as MenuPageArguments?,
               ),
             );
           case ReviewListPage.routeName:
             return MaterialPageRoute(
               builder: (context) => ReviewListPage(
-                args: settings.arguments as ReviewPageArguments,
+                args: settings.arguments as ReviewPageArguments?,
               ),
             );
           default:
@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
 
 class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context) {
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
       ..badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;

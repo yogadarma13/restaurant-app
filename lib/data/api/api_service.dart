@@ -24,7 +24,7 @@ class ApiService {
   }
 
   Future<DetailRestaurantResult> getDetailRestaurant(
-      String restaurantId) async {
+      String? restaurantId) async {
     final Uri url =
         Uri.https(_authority, '$_pathDetailRestaurant/$restaurantId');
 

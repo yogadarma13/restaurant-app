@@ -6,19 +6,19 @@ import 'package:restaurant_app/provider/result_state.dart';
 class RestaurantProvider extends ChangeNotifier {
   final ApiService apiService;
 
-  RestaurantProvider({@required this.apiService}) {
+  RestaurantProvider({required this.apiService}) {
     _fetchAllRestaurant();
   }
 
-  RestaurantResult _restaurantResult;
-  ResultState _resultState;
+  RestaurantResult? _restaurantResult;
+  ResultState? _resultState;
   String _message = '';
 
   String get message => _message;
 
-  RestaurantResult get result => _restaurantResult;
+  RestaurantResult? get result => _restaurantResult;
 
-  ResultState get state => _resultState;
+  ResultState? get state => _resultState;
 
   _fetchAllRestaurant() async {
     try {
@@ -26,7 +26,7 @@ class RestaurantProvider extends ChangeNotifier {
       notifyListeners();
 
       final restaurant = await apiService.getRestaurant();
-      if (restaurant.restaurants.isEmpty) {
+      if (restaurant.restaurants!.isEmpty) {
         _resultState = ResultState.NoData;
         notifyListeners();
 
@@ -54,7 +54,7 @@ class RestaurantProvider extends ChangeNotifier {
       notifyListeners();
 
       final restaurant = await apiService.searchRestaurant(query);
-      if (restaurant.restaurants.isEmpty) {
+      if (restaurant.restaurants!.isEmpty) {
         _resultState = ResultState.NoData;
         notifyListeners();
 

@@ -6,15 +6,15 @@ import 'package:restaurant_app/provider/result_state.dart';
 class ReviewProvider extends ChangeNotifier {
   final ApiService apiService;
 
-  ReviewProvider({@required this.apiService});
+  ReviewProvider({required this.apiService});
 
-  ReviewResult _reviewResult;
-  ResultState _resultState;
+  ReviewResult? _reviewResult;
+  ResultState? _resultState;
   String _message = '';
 
-  ReviewResult get result => _reviewResult;
+  ReviewResult? get result => _reviewResult;
 
-  ResultState get state => _resultState;
+  ResultState? get state => _resultState;
 
   String get message => _message;
 
@@ -22,7 +22,7 @@ class ReviewProvider extends ChangeNotifier {
     try {
       final reviewData =
           await apiService.addNewReview(restaurantId, name, review);
-      if (reviewData.customerReviews.isEmpty) {
+      if (reviewData.customerReviews!.isEmpty) {
         _resultState = ResultState.NoData;
         notifyListeners();
 

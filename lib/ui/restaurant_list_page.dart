@@ -13,7 +13,7 @@ class RestaurantListPage extends StatelessWidget {
       if (state.state == ResultState.Loading) {
         return Center(child: CircularProgressIndicator());
       } else if (state.state == ResultState.HasData) {
-        List<Restaurant> restaurantList = state.result.restaurants;
+        List<Restaurant> restaurantList = state.result!.restaurants!;
         return ListView.builder(
           physics: BouncingScrollPhysics(),
           itemCount: restaurantList.length,

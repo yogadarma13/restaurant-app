@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 class ItemMenu extends StatelessWidget {
-  final String menuName;
+  final String? menuName;
   final Function onItemTap;
 
-  const ItemMenu({Key key, @required this.menuName, @required this.onItemTap})
+  const ItemMenu({Key? key, required this.menuName, required this.onItemTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onItemTap,
+      onTap: onItemTap as void Function()?,
       child: Container(
         decoration: BoxDecoration(
           color: Colors.transparent,
@@ -41,7 +41,7 @@ class ItemMenu extends StatelessWidget {
                 height: 48,
               ),
             ),
-            Text(menuName),
+            Text(menuName!),
           ],
         ),
       ),

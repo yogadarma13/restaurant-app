@@ -15,9 +15,9 @@ class ReviewListPage extends StatelessWidget {
   static const routeName = '/review_list_page';
   static const String reviewTitle = "Review Restaurant";
 
-  final ReviewPageArguments args;
+  final ReviewPageArguments? args;
 
-  ReviewListPage({@required this.args});
+  ReviewListPage({required this.args});
 
   Widget _buildAndroid(BuildContext context) {
     return Consumer<ReviewProvider>(
@@ -30,7 +30,7 @@ class ReviewListPage extends StatelessWidget {
             onPressed: () => showDialog(
               context: context,
               builder: (context) => CustomAddReviewDialog(
-                restaurantId: args.restaurantId,
+                restaurantId: args!.restaurantId,
                 addReview: state.addNewReview,
               ),
             ),
@@ -40,7 +40,7 @@ class ReviewListPage extends StatelessWidget {
             ),
             backgroundColor: Colors.blue,
           ),
-          body: _buildWidget(context, state, args.reviews),
+          body: _buildWidget(context, state, args!.reviews),
         );
       },
     );
@@ -57,13 +57,13 @@ class ReviewListPage extends StatelessWidget {
               onTap: () => showDialog(
                 context: context,
                 builder: (context) => CustomAddReviewDialog(
-                  restaurantId: args.restaurantId,
+                  restaurantId: args!.restaurantId,
                   addReview: state.addNewReview,
                 ),
               ),
             ),
           ),
-          child: _buildWidget(context, state, args.reviews),
+          child: _buildWidget(context, state, args!.reviews),
         );
       },
     );
@@ -86,12 +86,12 @@ class ReviewListPage extends StatelessWidget {
   }
 
   Widget _buildWidget(BuildContext context, ReviewProvider state,
-      List<CustomerReview> reviews) {
+      List<CustomerReview>? reviews) {
     if (state.state == ResultState.HasData) {
       Fluttertoast.showToast(
           msg: state.message, toastLength: Toast.LENGTH_SHORT);
       Navigator.pop(context);
-      return _buildReviewList(state.result.customerReviews);
+      return _buildReviewList(state.result!.customerReviews!);
     } else if (state.state == ResultState.NoData) {
       Fluttertoast.showToast(
           msg: state.message, toastLength: Toast.LENGTH_SHORT);
@@ -102,7 +102,7 @@ class ReviewListPage extends StatelessWidget {
           msg: state.message, toastLength: Toast.LENGTH_SHORT);
       return Container();
     } else {
-      return _buildReviewList(reviews);
+      return _buildReviewList(reviews!);
     }
   }
 

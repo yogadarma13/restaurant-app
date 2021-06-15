@@ -5,5 +5,5 @@ class MenuPageArguments {
   final String appbarTitle;
   final List<RestaurantItem> menus;
 
-  MenuPageArguments({@required this.appbarTitle, @required this.menus});
+  MenuPageArguments({required this.appbarTitle, required this.menus});
 }

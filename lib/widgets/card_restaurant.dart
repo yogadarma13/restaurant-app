@@ -6,20 +6,20 @@ class CardRestaurant extends StatelessWidget {
   final Function onItemTap;
 
   const CardRestaurant(
-      {Key key, @required this.restaurant, @required this.onItemTap})
+      {Key? key, required this.restaurant, required this.onItemTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onItemTap,
+      onTap: onItemTap as void Function()?,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Hero(
-              tag: restaurant.pictureId,
+              tag: restaurant.pictureId!,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.network(
@@ -37,12 +37,12 @@ class CardRestaurant extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      restaurant.name,
+                      restaurant.name!,
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      restaurant.description,
+                      restaurant.description!,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -55,7 +55,7 @@ class CardRestaurant extends StatelessWidget {
                             color: Colors.red,
                             size: 16,
                           ),
-                          Text(restaurant.city),
+                          Text(restaurant.city!),
                           Container(
                             height: 16,
                             child: VerticalDivider(

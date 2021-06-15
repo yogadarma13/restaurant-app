@@ -5,22 +5,22 @@ import 'package:restaurant_app/provider/result_state.dart';
 
 class DetailRestaurantProvider extends ChangeNotifier {
   final ApiService apiService;
-  final String restaurantId;
+  final String? restaurantId;
 
   DetailRestaurantProvider(
-      {@required this.apiService, @required this.restaurantId}) {
+      {required this.apiService, required this.restaurantId}) {
     _getDetailRestaurant();
   }
 
-  DetailRestaurantResult _detailResult;
-  ResultState _resultState;
+  DetailRestaurantResult? _detailResult;
+  ResultState? _resultState;
   String _message = '';
 
   String get message => _message;
 
-  DetailRestaurantResult get result => _detailResult;
+  DetailRestaurantResult? get result => _detailResult;
 
-  ResultState get state => _resultState;
+  ResultState? get state => _resultState;
 
   _getDetailRestaurant() async {
     try {

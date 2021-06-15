@@ -8,14 +8,14 @@ import 'package:restaurant_app/widgets/platform_widget.dart';
 class MenuListPage extends StatelessWidget {
   static const routeName = '/menu_list_page';
 
-  final MenuPageArguments args;
+  final MenuPageArguments? args;
 
-  MenuListPage({@required this.args});
+  MenuListPage({required this.args});
 
   Widget _buildAndroid(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(args.appbarTitle),
+        title: Text(args!.appbarTitle),
       ),
       body: _buildMenuList(context),
     );
@@ -24,7 +24,7 @@ class MenuListPage extends StatelessWidget {
   Widget _buildIos(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text(args.appbarTitle),
+        middle: Text(args!.appbarTitle),
       ),
       child: _buildMenuList(context),
     );
@@ -37,14 +37,14 @@ class MenuListPage extends StatelessWidget {
       child: ListView.builder(
         physics: ClampingScrollPhysics(),
         shrinkWrap: true,
-        itemCount: args.menus.length,
+        itemCount: args!.menus.length,
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: ItemMenu(
-              menuName: args.menus[index].name,
+              menuName: args!.menus[index].name,
               onItemTap: () =>
-                  _showMenuSelectedDialog(context, args.menus[index].name),
+                  _showMenuSelectedDialog(context, args!.menus[index].name),
             ),
           );
         },
@@ -52,7 +52,7 @@ class MenuListPage extends StatelessWidget {
     );
   }
 
-  void _showMenuSelectedDialog(BuildContext context, String itemName) {
+  void _showMenuSelectedDialog(BuildContext context, String? itemName) {
     defaultTargetPlatform == TargetPlatform.iOS
         ? showCupertinoDialog(
             context: context,

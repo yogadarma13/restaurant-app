@@ -18,16 +18,16 @@ import 'package:share/share.dart';
 class DetailRestaurantPage extends StatelessWidget {
   static const routeName = '/detail_restaurant_page';
 
-  final String restaurantId;
+  final String? restaurantId;
 
-  const DetailRestaurantPage({@required this.restaurantId});
+  const DetailRestaurantPage({required this.restaurantId});
 
-  void _onRestaurantShare(BuildContext context, String restaurantName) async {
+  void _onRestaurantShare(BuildContext context, String? restaurantName) async {
     await Share.share(
         "Nikmati makanan dan minuman dari restaurant $restaurantName");
   }
 
-  void _showMenuSelectedDialog(BuildContext context, String itemName) {
+  void _showMenuSelectedDialog(BuildContext context, String? itemName) {
     defaultTargetPlatform == TargetPlatform.iOS
         ? showCupertinoDialog(
             context: context,
@@ -100,7 +100,7 @@ class DetailRestaurantPage extends StatelessWidget {
         NotificationListener<OverscrollIndicatorNotification>(
           onNotification: (overscroll) {
             overscroll.disallowGlow();
-            return;
+            return true as dynamic;
           },
           child: MediaQuery.removePadding(
             removeTop: true,
@@ -128,7 +128,7 @@ class DetailRestaurantPage extends StatelessWidget {
     return NotificationListener<OverscrollIndicatorNotification>(
       onNotification: (overscroll) {
         overscroll.disallowGlow();
-        return;
+        return true as dynamic;
       },
       child: MediaQuery.removePadding(
         removeTop: true,
@@ -160,12 +160,12 @@ class DetailRestaurantPage extends StatelessWidget {
             if (state.state == ResultState.Loading) {
               return Center(child: CircularProgressIndicator());
             } else if (state.state == ResultState.HasData) {
-              Restaurant restaurant = state.result.restaurant;
+              Restaurant restaurant = state.result!.restaurant!;
               return NestedScrollView(
                 headerSliverBuilder: (context, _) {
                   return [
                     SliverAppBar(
-                      title: Text(restaurant.name),
+                      title: Text(restaurant.name!),
                       pinned: true,
                       expandedHeight: 250,
                       actions: [
@@ -178,7 +178,7 @@ class DetailRestaurantPage extends StatelessWidget {
                       flexibleSpace: FlexibleSpaceBar(
                         collapseMode: CollapseMode.pin,
                         background: Hero(
-                          tag: restaurant.pictureId,
+                          tag: restaurant.pictureId!,
                           child: Image.network(
                             "https://restaurant-api.dicoding.dev/images/medium/${restaurant.pictureId}",
                             fit: BoxFit.cover,
@@ -220,7 +220,7 @@ class DetailRestaurantPage extends StatelessWidget {
                               size: 20,
                             ),
                             Text(
-                              restaurant.city,
+                              restaurant.city!,
                               style: TextStyle(fontSize: 16),
                             ),
                           ],
@@ -233,11 +233,11 @@ class DetailRestaurantPage extends StatelessWidget {
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                         ),
-                        Text(restaurant.description),
+                        Text(restaurant.description!),
                         _buildMenuList(
-                            context, "Makanan", restaurant.menus.foods),
+                            context, "Makanan", restaurant.menus!.foods!),
                         _buildMenuList(
-                            context, "Minuman", restaurant.menus.drinks),
+                            context, "Minuman", restaurant.menus!.drinks!),
                         SizedBox(
                           height: 16.0,
                         ),
@@ -256,7 +256,7 @@ class DetailRestaurantPage extends StatelessWidget {
                           height: 8.0,
                         ),
                         _buildReviewList(
-                            context, state.result.restaurant.customerReviews),
+                            context, state.result!.restaurant!.customerReviews!),
                         Center(
                           child: TextButton(
                             onPressed: () => Navigator.pushNamed(
@@ -264,7 +264,7 @@ class DetailRestaurantPage extends StatelessWidget {
                                 arguments: ReviewPageArguments(
                                     restaurantId: restaurantId,
                                     reviews: state
-                                        .result.restaurant.customerReviews)),
+                                        .result!.restaurant!.customerReviews)),
                             child: Text(
                               "Lihat semua review",
                               style: TextStyle(

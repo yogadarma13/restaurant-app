@@ -6,11 +6,11 @@ import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/provider/review_provider.dart';
 
 class CustomAddReviewDialog extends StatefulWidget {
-  final String restaurantId;
+  final String? restaurantId;
   final Function addReview;
 
   CustomAddReviewDialog(
-      {@required this.restaurantId, @required this.addReview});
+      {required this.restaurantId, required this.addReview});
 
   @override
   _CustomAddReviewDialogState createState() => _CustomAddReviewDialogState();
