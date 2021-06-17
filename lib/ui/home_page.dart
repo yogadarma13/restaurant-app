@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
+import 'package:restaurant_app/ui/detail_restaurant_page.dart';
 import 'package:restaurant_app/ui/favorite_restaurant_page.dart';
 import 'package:restaurant_app/ui/restaurant_list_page.dart';
+import 'package:restaurant_app/ui/settings_page.dart';
+import 'package:restaurant_app/utils/backgroud_service.dart';
+import 'package:restaurant_app/utils/notification_helper.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static const routeName = '/home_page';
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final NotificationHelper _notificationHelper = NotificationHelper();
+  final BackgroundService _service = BackgroundService();
 
   Widget _appBar(BuildContext context) {
     return Container(
@@ -24,11 +36,27 @@ class HomePage extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.black),
               ),
-              IconButton(
-                icon: Icon(Icons.favorite_rounded),
-                onPressed: () => Navigator.pushNamed(
-                    context, FavoriteRestaurantPage.routeName),
-              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: EdgeInsets.zero,
+                    child: IconButton(
+                      icon: Icon(Icons.favorite_rounded),
+                      onPressed: () => Navigator.pushNamed(
+                          context, FavoriteRestaurantPage.routeName),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.zero,
+                    child: IconButton(
+                      icon: Icon(Icons.settings),
+                      onPressed: () =>
+                          Navigator.pushNamed(context, SettingsPage.routeName),
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
           SizedBox(
@@ -66,6 +94,20 @@ class HomePage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    port.listen((_) async => await _service.someTask());
+    _notificationHelper
+        .configureSelectNotificationSubject(DetailRestaurantPage.routeName);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    selectNotificationSubject.close();
   }
 
   @override
