@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:restaurant_app/data/model/detail_restaurant_result.dart';
 
 class MenuPageArguments {

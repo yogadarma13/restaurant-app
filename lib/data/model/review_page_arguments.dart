@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:restaurant_app/data/model/customer_review.dart';
 
 class ReviewPageArguments {

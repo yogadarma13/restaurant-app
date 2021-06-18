@@ -21,8 +21,10 @@ class ItemReview extends StatelessWidget {
               child: FadeInImage(
                 width: 60.0,
                 height: 60.0,
-                placeholder: AssetImage("assets/images/ic_profile_placeholder.png"),
-                image: NetworkImage("https://i.pravatar.cc/80?u=${review.name!.trim()}"),
+                placeholder:
+                    AssetImage("assets/images/ic_profile_placeholder.png"),
+                image: NetworkImage(
+                    "https://i.pravatar.cc/80?u=${review.name!.trim()}"),
               ),
             ),
           ),

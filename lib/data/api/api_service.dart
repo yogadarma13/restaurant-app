@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:restaurant_app/data/model/detail_restaurant_result.dart';
 import 'package:restaurant_app/data/model/restaurant_result.dart';
 import 'package:restaurant_app/data/model/review_result.dart';
+
+import '../../main.dart';
 
 class ApiService {
   static final String _authority = 'restaurant-api.dicoding.dev';
@@ -13,6 +16,7 @@ class ApiService {
   static final String _pathReviewRestaurant = "/review";
 
   Future<RestaurantResult> getRestaurant() async {
+    HttpOverrides.global = MyHttpOverrides();
     final Uri url = Uri.https(_authority, _pathListRestaurant);
 
     final response = await http.get(url);
@@ -25,6 +29,7 @@ class ApiService {
 
   Future<DetailRestaurantResult> getDetailRestaurant(
       String? restaurantId) async {
+    HttpOverrides.global = MyHttpOverrides();
     final Uri url =
         Uri.https(_authority, '$_pathDetailRestaurant/$restaurantId');
 
@@ -37,6 +42,7 @@ class ApiService {
   }
 
   Future<RestaurantResult> searchRestaurant(String query) async {
+    HttpOverrides.global = MyHttpOverrides();
     final Uri url = Uri.https(_authority, _pathSearchRestaurant, {'q': query});
 
     final response = await http.get(url);
@@ -49,6 +55,7 @@ class ApiService {
 
   Future<ReviewResult> addNewReview(
       String restaurantId, String name, String review) async {
+    HttpOverrides.global = MyHttpOverrides();
     final Uri url = Uri.https(_authority, _pathReviewRestaurant);
 
     final response = await http.post(

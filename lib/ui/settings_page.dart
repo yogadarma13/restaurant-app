@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,12 +42,8 @@ class SettingsPage extends StatelessWidget {
                     return Switch.adaptive(
                       value: provider.isDailyReminderActive,
                       onChanged: (value) async {
-                        if (Platform.isIOS) {
-                          // customDialog(context);
-                        } else {
-                          scheduled.scheduledRestaurant(value);
-                          provider.setDailyReminder(value);
-                        }
+                        scheduled.scheduledRestaurant(value);
+                        provider.setDailyReminder(value);
                       },
                     );
                   },

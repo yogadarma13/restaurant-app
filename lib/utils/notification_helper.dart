@@ -56,21 +56,29 @@ class NotificationHelper {
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
 
+    var randomIndex = Random().nextInt(restaurant.restaurants!.length);
     var titleNotification = "<b>Restaurant hari ini</b>";
-    var bodyNotification = "Ayo lihat rekomendasi restaurant hari ini!!";
+    var bodyNotification = "Rekomendasi restaurant hari ini: " +
+        "<b>${restaurant.restaurants![randomIndex].name!}</b>";
 
     await flutterLocalNotificationsPlugin.show(
-        0, titleNotification, bodyNotification, platformChannelSpecifics,
-        payload: json.encode(restaurant.toJson()));
+      0,
+      titleNotification,
+      bodyNotification,
+      platformChannelSpecifics,
+      payload: json.encode(
+        {'payload': restaurant.toJson(), 'index': randomIndex},
+      ),
+    );
   }
 
   void configureSelectNotificationSubject(String route) {
     selectNotificationSubject.stream.listen(
       (String? payload) async {
-        var data = RestaurantResult.fromJson(json.decode(payload!));
-        var randomIndex = Random();
-        var restaurant =
-            data.restaurants![randomIndex.nextInt(data.restaurants!.length)];
+        var data = json.decode(payload!);
+        print(data);
+        var restaurantData = RestaurantResult.fromJson(data["payload"]);
+        var restaurant = restaurantData.restaurants![data["index"]];
         Navigation.intentWithData(route, restaurant.id);
       },
     );

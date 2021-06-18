@@ -38,9 +38,9 @@ Future<void> main() async {
 
   _service.initializeIsolate();
 
-  // if (Platform.isAndroid) {
+  if (Platform.isAndroid) {
     AndroidAlarmManager.initialize();
-  // }
+  }
   await _notificationHelper.initNotifications(flutterLocalNotificationsPlugin);
 
   HttpOverrides.global = MyHttpOverrides();
