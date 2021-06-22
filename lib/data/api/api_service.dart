@@ -15,11 +15,13 @@ class ApiService {
   static final String _pathSearchRestaurant = "/search";
   static final String _pathReviewRestaurant = "/review";
 
+  http.Client client = http.Client();
+
   Future<RestaurantResult> getRestaurant() async {
     HttpOverrides.global = MyHttpOverrides();
     final Uri url = Uri.https(_authority, _pathListRestaurant);
 
-    final response = await http.get(url);
+    final response = await client.get(url);
     if (response.statusCode == 200) {
       return RestaurantResult.fromJson(json.decode(response.body));
     } else {
@@ -33,7 +35,7 @@ class ApiService {
     final Uri url =
         Uri.https(_authority, '$_pathDetailRestaurant/$restaurantId');
 
-    final response = await http.get(url);
+    final response = await client.get(url);
     if (response.statusCode == 200) {
       return DetailRestaurantResult.fromJson(json.decode(response.body));
     } else {
@@ -45,7 +47,7 @@ class ApiService {
     HttpOverrides.global = MyHttpOverrides();
     final Uri url = Uri.https(_authority, _pathSearchRestaurant, {'q': query});
 
-    final response = await http.get(url);
+    final response = await client.get(url);
     if (response.statusCode == 200) {
       return RestaurantResult.fromJson(json.decode(response.body));
     } else {
@@ -58,7 +60,7 @@ class ApiService {
     HttpOverrides.global = MyHttpOverrides();
     final Uri url = Uri.https(_authority, _pathReviewRestaurant);
 
-    final response = await http.post(
+    final response = await client.post(
       url,
       headers: {'Content-Type': 'application/json', 'X-Auth-Token': '12345'},
       body: jsonEncode(
